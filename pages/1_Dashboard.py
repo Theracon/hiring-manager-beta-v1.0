@@ -62,9 +62,9 @@ def transcribe_file_v2(
         auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
         language_codes=language_codes,
         model="latest_long",
-        # features=cloud_speech.RecognitionFeatures(
-        #     enable_automatic_punctuation=True
-        # )
+        features=cloud_speech.RecognitionFeatures(
+            enable_automatic_punctuation=True
+        )
     )
 
     request = cloud_speech.RecognizeRequest(
@@ -85,8 +85,6 @@ def transcribe_file_v2(
 
 def analyze(context, question):
     if context is not None:
-        print("Context:", context.metadata)
-
         # extract text in file
         text = ""
         for page in context.pages:
@@ -173,27 +171,29 @@ if mode == "Text :pencil:":
     user_question = st.text_area("Enter your question here:")
 elif mode == "Audio :microphone:":
     user_question = st.file_uploader("Upload audio file", type="wav")
+    file_name = f"./{user_question.name}"
 
 
 if user_question:
-    file_name = f"./{user_question.name}"
-    text_from_speech = transcribe_file_v2(
-        project_name, file_name, language_codes)
-    st.divider()
-    st.write("Transcribed Audio:", text_from_speech)
-    st.button('Edit')
-    st.divider()
+    if file_name:
+        text_from_speech = transcribe_file_v2(
+            project_name, file_name, language_codes)
+        st.divider()
+        st.write("Transcribed Audio:")
+        st.write(text_from_speech)
+        st.button('Edit')
+        st.divider()
 
     if mode == 'Enter Text':
-        question = user_question
+        user_question = user_question
     else:
-        question = text_from_speech
+        user_question = text_from_speech
 
 # upload context file
 context = PdfReader("AdeleAI-v1.0.pdf")
 
 if st.button('Go!', type='primary'):
-    analyze(context, question)
+    analyze(context, user_question)
 
 st.divider()
 st.caption("Adele AI (c) 2023. All rights reserved.")
