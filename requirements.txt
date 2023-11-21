@@ -1,0 +1,7 @@
+streamlit
+dotenv
+hmac
+typing
+PyPDF2
+langchain
+google
