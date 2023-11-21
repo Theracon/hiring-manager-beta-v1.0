@@ -1,7 +1,5 @@
 streamlit
 python-dotenv
-hmac
-typing
 PyPDF2
 langchain
 google-api-python-client
