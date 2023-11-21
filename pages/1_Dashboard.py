@@ -16,7 +16,8 @@ st.sidebar.success("Welcome to your Dashboard!")
 
 project_name = 'adele-405718'
 language_codes = ["en-US", "es-ES"]
-user_question = ""
+user_question = None
+file_name = None
 mode = st.radio(
     "**What's your preferred input method?**",
     ["Text :pencil:", "Audio :microphone:"],
@@ -27,7 +28,8 @@ if mode == "Text :pencil:":
     user_question = st.text_area("Enter your question here:")
 elif mode == "Audio :microphone:":
     user_question = st.file_uploader("Upload audio file", type="wav")
-    file_name = f"{user_question.name}"
+    if user_question and user_question.name:
+        file_name = f"{user_question.name}"
 
 if user_question:
     if file_name:
