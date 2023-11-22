@@ -1,3 +1,4 @@
+from io import BytesIO
 from typing import List
 
 from google.cloud.speech_v2 import SpeechClient
@@ -6,7 +7,7 @@ from google.cloud.speech_v2.types import cloud_speech
 
 def transcribe_audio(
     project_id: str,
-    audio_file: str,
+    audio_bytes: BytesIO,
     language_codes: List[str]
 ) -> cloud_speech.RecognizeResponse:
     """Transcribes an audio file to text."""
@@ -14,8 +15,10 @@ def transcribe_audio(
     # Instantiates a client
     client = SpeechClient()
     # Reads a file as bytes
-    with open(audio_file, "rb") as f:
-        content = f.read()
+
+    # with open(audio_bytes, "rb") as f:
+    #     content = f.read()
+    content = BytesIO(audio_bytes).read()
     config = cloud_speech.RecognitionConfig(
         auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
         language_codes=language_codes,
