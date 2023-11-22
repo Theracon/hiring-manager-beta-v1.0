@@ -38,8 +38,8 @@ else:
     audio_manuscript = st.file_uploader("Upload audio file", type="wav")
     if audio_manuscript is not None:
         raw_bytes = audio_manuscript.getvalue()
-        sanitized_bytes = sanitize_bytes(raw_bytes)
-        if sanitized_bytes:
+        # sanitized_bytes = sanitize_bytes(raw_bytes)
+        if raw_bytes:
             transcript = transcribe_audio(
                 project_name, raw_bytes, language_codes)
             st.divider()
