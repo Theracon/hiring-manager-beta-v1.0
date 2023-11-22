@@ -5,3 +5,6 @@ st.header("Privacy Policy")
 st.divider()
 
 st.sidebar.success("Read our Privacy Policy.")
+
+st.divider()
+st.caption("Adele AI (c) 2023. All rights reserved.")

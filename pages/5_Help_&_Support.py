@@ -5,3 +5,6 @@ st.header("Help & Support")
 st.divider()
 
 st.sidebar.success("Get Help & Support.")
+
+st.divider()
+st.caption("Adele AI (c) 2023. All rights reserved.")
