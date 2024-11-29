@@ -7,4 +7,4 @@ st.divider()
 st.sidebar.success("Read our Privacy Policy.")
 
 st.divider()
-st.caption("Adele AI (c) 2023. All rights reserved.")
+st.caption("Notoris Technologies (c) 2024. All rights reserved.")

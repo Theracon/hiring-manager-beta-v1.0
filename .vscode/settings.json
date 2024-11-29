@@ -1,4 +1,7 @@
 {
   "editor.wordWrap": "wordWrapColumn",
-  "editor.wordWrapColumn": 150
+  "editor.wordWrapColumn": 150,
+  "cSpell.words": [
+    "aiqa"
+  ]
 }

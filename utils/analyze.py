@@ -1,15 +1,20 @@
+import time
 import streamlit as st
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
 from langchain.chains.question_answering import load_qa_chain
 from langchain.llms import OpenAI
-from langchain.chains import LLMChain
-from langchain.prompts import PromptTemplate
+# from langchain.chains import LLMChain
+# from langchain.prompts import PromptTemplate
 from langchain.callbacks import get_openai_callback
 
 
 def analyze_text(context, question):
+    response = None
+
+    response_status = st.status("Working on it. Hang on...")
+
     if context is not None:
         # extract text in file
         text = ""
@@ -28,47 +33,31 @@ def analyze_text(context, question):
         knowledge_base = FAISS.from_texts(chunks, embeddings)
 
         if question:
-            formatted_question = f"The question is after the colon symbol. Be as verbose as possible in your response. Your response should include a 'Interpretation of Question' subheading under which you'll write your interpretation of the user's question, a 'Recommendation' subheading under which you'll write the role you're recommending to the user. Each subheading and its content should be its own paragraph: {question}"
+            formatted_question = f"The question is after the colon. (Be as precise as possible in your response. Your response should ideally be a sentence long, unless where it makes sense to have more than a sentence): {question}"
             docs = knowledge_base.similarity_search(formatted_question)
-            template = """Question: {question}
-            Answer: Let's think step by step."""
-            prompt = PromptTemplate(
-                template=template, input_variables=["question"])
-            llm = OpenAI()
+            llm = OpenAI(model_name="gpt-3.5-turbo")
             chain = load_qa_chain(llm, chain_type="stuff", verbose=True)
             with get_openai_callback() as cb:
                 response = chain.run(input_documents=docs,
                                      question=formatted_question)
+                response_status.update(
+                    label="Your answer is ready!", state="complete")
                 print(cb)
 
-            # if response is not None:
-            #     reason_chain = LLMChain(prompt=prompt, llm=llm)
-            #     reason_question = f"Tell me the reason why I should do the action in the quoted text: '{response}'"
-            #     with get_openai_callback() as cb:
-            #         reason_response = reason_chain.run(reason_question)
-            #         print(cb)
-            #     with get_openai_callback() as cb:
-            #         further_consideration_response = reason_chain.run(question)
-            #         print(cb)
-
-            st.subheader('Recommendation Report')
-            st.caption("This recommendation report has been created with Adele AI. If you have any questions or feedback, please reach out to the Customer Supoort team at example@adeleai.com")
             st.divider()
-            st.write("Question: ", question)
+            st.subheader('Answer')
             st.divider()
-            st.write(response)
-
-            # if reason_response:
-            #     st.write("Reason for Recommending: ", reason_response)
-            # if further_consideration_response:
-            #     st.write("Further Considerations: ", further_consideration_response)
-
+            st.text(f"Question: {question}")
+            st.write(f"Answer: {response if response else 'Thinking...'}")
             st.divider()
-            st.write("Download Recommendation Report")
+            st.caption(
+                'Disclaimer: AI Q&A (BETA) can may be wrong. For enquiries, please reach us at notoristechnologies@gmail.com.')
+            st.divider()
+            st.write("Download Response")
             st.download_button(
-                type="primary",
+                type="secondary",
                 mime="text/plain",
-                file_name="adeleai_recommendation_report",
+                file_name="aiqa-answer",
                 label="Download",
                 data=response,
             )
