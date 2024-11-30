@@ -1,4 +1,3 @@
-import time
 import streamlit as st
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.embeddings.openai import OpenAIEmbeddings
